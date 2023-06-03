@@ -1,0 +1,94 @@
+
+<html>
+<head>
+  <style>
+    /* Стили для списка */
+    #suggestions {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #suggestions li {
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    #suggestions li:hover {
+      background-color: lightblue;
+    }
+  </style>
+</head>
+<body>
+  <!-- Поле ввода и список -->
+  <input type="text" id="stations" placeholder="Введите название станции">
+  <ul id="suggestions"></ul>
+
+  <!-- Скрипт для автозаполнения -->
+  <script>
+    // Получаем элементы полей ввода и списка
+    let inputField = document.getElementById("stations");
+    let ulField = document.getElementById("suggestions");
+
+    // Добавляем обработчик события на изменение ввода
+    inputField.addEventListener("input", changeAutoComplete);
+
+    // Добавляем обработчик события на выбор элемента из списка
+    ulField.addEventListener("click", selectItem);
+
+    // Создаем словарь станций
+    let stations = {
+      "Авиамоторная": "Москва",
+      "Автозаводская": "Москва",
+      "Адмиралтейская": "Санкт-Петербург",
+      "Академгородок": "Новосибирск",
+      // и так далее
+    };
+
+    // Функция для изменения автозаполнения
+    function changeAutoComplete({ target }) {
+      // Получаем значение введенное пользователем
+      let data = target.value;
+
+      // Очищаем список от предыдущих значений
+      ulField.innerHTML = "";
+
+      // Если ввод не пустой, то ищем подходящие станции
+      if (data.length) {
+        // Создаем массив для хранения найденных станций
+        let autoCompleteValues = [];
+
+        // Перебираем все ключи словаря станций
+        for (let key of Object.keys(stations)) {
+          // Если ключ начинается с введенного значения, то добавляем его в массив
+          if (key.toLowerCase().startsWith(data.toLowerCase())) {
+            autoCompleteValues.push(key);
+          }
+        }
+
+        // Если массив не пустой, то создаем элементы списка для каждого значения
+        if (autoCompleteValues.length) {
+          for (let value of autoCompleteValues) {
+            // Создаем элемент li с текстом значения и атрибутом data-city со значением города
+            let li = document.createElement("li");
+            li.textContent = value;
+            li.setAttribute("data-city", stations[value]);
+
+            // Добавляем элемент в список
+            ulField.appendChild(li);
+          }
+        }
+      }
+    }
+
+    // Функция для выбора элемента из списка
+    function selectItem({ target }) {
+      // Если кликнули по элементу li, то заполняем поле ввода его текстом и выводим город в консоль
+      if (target.tagName === "LI") {
+        inputField.value = target.textContent;
+        console.log(target.getAttribute("data-city"));
+      }
+    }
+  </script>
+</body>
+</html>

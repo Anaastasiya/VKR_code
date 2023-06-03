@@ -44,8 +44,8 @@ def stations():
         params = {
             "apikey": API_KEY, # замените на свой ключ API
             "format": "json",
-            "lang": "ru_RU",
-            "country_code": country_code # код страны
+            "lang": "ru_RU"
+            # "yanded_code": country_code # код страны
         }
         # Отправляем запрос к API и получаем ответ в формате JSON
         response = requests.get("https://api.rasp.yandex.net/v3.0/stations_list/", params=params)
@@ -53,11 +53,15 @@ def stations():
         # Создаем пустой список станций
         stations = []
         # Проходим по списку регионов в ответе и добавляем станции в список stations
-        for region in data["countries"][0]["regions"]:
-            for settlement in region["settlements"]:
-                for station in settlement["stations"]:
-                    stations.append(station)
-        # Возвращаем список станций в формате JSON с помощью функции jsonify из библиотеки Flask
+        for country in data["countries"]:
+            if 'yandex_code' in country['codes'].keys():
+                if country['codes']['yandex_code'] == country_code:
+                    for region in country["regions"]:
+                        for settlement in region["settlements"]:
+                            
+                            for station in settlement["stations"]:
+                                stations.append(station)
+                    # Возвращаем список станций в формате JSON с помощью функции jsonify из библиотеки Flask
         return jsonify(stations)
     else:
         # Если код страны пустой, то возвращаем пустой список в формате JSON
