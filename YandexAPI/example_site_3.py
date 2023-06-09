@@ -1,4 +1,4 @@
-API_KEY = 'd7012521-ab87-4756-8244-36216e5d9ea4'
+API_KEY = '1d5197db-641b-460e-a97e-750e0311d94c'
 # Импортируем необходимые библиотеки
 from flask import Flask, render_template, request, jsonify
 import requests
@@ -15,7 +15,6 @@ params = {
     "format": "json",
     "lang": "ru_RU"
 }
-
 # Отправляем запрос к API и получаем ответ в формате JSON
 response = requests.get("https://api.rasp.yandex.net/v3.0/stations_list/", params=params)
 data = response.json()
@@ -44,8 +43,8 @@ def stations():
         params = {
             "apikey": API_KEY, # замените на свой ключ API
             "format": "json",
-            "lang": "ru_RU"
-            # "yanded_code": country_code # код страны
+            "lang": "ru_RU",
+            "country_code": country_code # код страны
         }
         # Отправляем запрос к API и получаем ответ в формате JSON
         response = requests.get("https://api.rasp.yandex.net/v3.0/stations_list/", params=params)
@@ -53,15 +52,11 @@ def stations():
         # Создаем пустой список станций
         stations = []
         # Проходим по списку регионов в ответе и добавляем станции в список stations
-        for country in data["countries"]:
-            if 'yandex_code' in country['codes'].keys():
-                if country['codes']['yandex_code'] == country_code:
-                    for region in country["regions"]:
-                        for settlement in region["settlements"]:
-                            
-                            for station in settlement["stations"]:
-                                stations.append(station)
-                    # Возвращаем список станций в формате JSON с помощью функции jsonify из библиотеки Flask
+        for region in data["countries"][0]["regions"]:
+            for settlement in region["settlements"]:
+                for station in settlement["stations"]:
+                    stations.append(station)
+        # Возвращаем список станций в формате JSON с помощью функции jsonify из библиотеки Flask
         return jsonify(stations)
     else:
         # Если код страны пустой, то возвращаем пустой список в формате JSON

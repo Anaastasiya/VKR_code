@@ -1,4 +1,4 @@
-API_KEY = 'd7012521-ab87-4756-8244-36216e5d9ea4'
+API_KEY = '1d5197db-641b-460e-a97e-750e0311d94c'
 # Импортируем необходимые библиотеки
 from flask import Flask, render_template, request
 from flask_cors import cross_origin,CORS

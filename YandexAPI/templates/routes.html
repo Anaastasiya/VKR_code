@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <title>Маршруты</title>
+    <link rel="stylesheet" href="../static/main.css"/>
+</head>
+<body>
+    
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <div class="header__logo">
+                <div id="logo" onclick = "slowScroll('#top')">
+                    <span>RouteCountry</span>
+                </div> 
+           </div>
+
+           <nav class="nav">
+               <a class="nav__link" href= "/">На главную</a>
+           </nav>
+        </div>
+    </div>
+</header>
+<div class="intro1">
+    <h1>Результаты поиска</h1>
+    {% if routes_data %}
+   
+        <table>
+        <thead>
+            <tr>
+                <th>Номер рейса</th>
+                <th>Тип транспорта</th>
+                <!--  <th>Сайт</th>-->
+                <th>Отправление из</th>
+                <th>Прибытие на</th>
+                <th>Время отправления</th>
+                <th>Время прибытия</th>
+                <th>Продолжительность, ч</th>
+                <th>Цена по ticket_info</th>
+                <th>Цена</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {% for route in routes_data.segments %}
+            <tr>
+                <td>{{ route.thread.number }}</td>
+                <td>{{ route.thread.transport_type }}</td>
+                <!--  <td>{{ route.thread.url }}</td>-->
+                <td>{{ route.from.title }}</td>
+                <td>{{ route.to.title }}</td>
+                <td>{{ route.departure }}</td>
+                <td>{{ route.arrival }}</td>
+                <td>{{ route.duration / 3600 }}</td>
+
+                <td>{{ route.tickets_info  }}</td>
+
+                {% if route.tickets_info.price %}
+                <td>{{ route.tickets_info.price.total.amount }} {{ route.tickets_info.price }}</td>
+                {% else %}
+                <td>Неизвестно</td>
+                {% endif %}
+
+                {% if route.price %}
+                <td>{{ route.price.total.amount }} {{ route.price.total.currency }}</td>
+                {% else %}
+                <td>Неизвестно</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table></div>
+    {% else %}
+    <p>Нет рейсов по заданным параметрам.</p>
+    {% endif %}
+
+</div> 
+    <footer>
+        <div id="social">
+           <a href="https://vk.com" title="Группа ВК" target="_blank"> 
+            <img src="../static/vk.png" alt="ВК" title="ВК"></a>
+           <a href="https://www.whatsapp.com" title="Whatsapp"target="_blank">
+            <img src="../static/whatsapp.png" alt="Whatsapp" title="Whatsapp"></a>
+           <a href="https://web.telegram.org" title="Группа telegram"target="_blank">
+            <img src="../static/telegram.png" alt="Telegram" title="Telegram"></a>
+        </div>
+            <div id="rights">
+                Все права защищены &copy 2023 RouteCountry<br> 
+                E-mail: helproute@mail.ru
+            </div>
+      </footer>
+</body>
+</html>
