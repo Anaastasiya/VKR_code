@@ -341,7 +341,7 @@ footer #rights {
 .intro1 {
   
     height: 750px;
-    padding-top: 100px;
+    padding-top: 80px;
     justify-content: center;
     background-repeat: no-repeat;
     background-attachment:fixed;
@@ -376,6 +376,7 @@ border: var(--border-width) solid var(--border-color);
     overflow-x: auto;
     /*white-space: nowrap;*/
     -webkit-overflow-scrolling: touch;
+    background-color: #fad6c3;
  }
  thead  {
 position: sticky;
@@ -393,4 +394,55 @@ border: 1px solid rgb(39, 37, 37);
   }
 
 
-    
+
+/* Стили для ползунка */
+.slider {
+    width: 300px; /* Установить ширину ползунка */
+    height: 25px; /* Установить высоту ползунка */
+    background-color: #ddd; /* Установить цвет фона ползунка */
+    outline: none; /* Убрать рамку при фокусе */
+    position: relative;
+    top: 10px;
+  }
+  
+  /* Стили для ползунка при наведении */
+  .slider:hover {
+    cursor: pointer; /* Изменить курсор на указатель */
+  }
+  
+  /* Стили для ползователя ползунка */
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Убрать стандартный вид */
+    width: 25px; /* Установить ширину ползователя */
+    height: 25px; /* Установить высоту ползователя */
+    background-color: #4CAF50; /* Установить цвет фона ползователя */
+    border-radius: 50%; /* Сделать ползователь круглым */
+  }
+  
+  /* Стили для ползователя ползунка при наведении */
+  .slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 5px #4CAF50; /* Добавить тень вокруг ползователя */
+  }
+  
+  /* Стили для кнопки */
+  .button {
+    width: 150px; /* Установить ширину кнопки */
+    height: 40px; /* Установить высоту кнопки */
+    color: white; /* Установить цвет текста кнопки */
+    background-color: #4CAF50; /* Установить цвет фона кнопки */
+    border: none; /* Убрать рамку кнопки */
+    font-size: 18px; /* Установить размер шрифта кнопки */
+    margin: 10px; /* Добавить отступы вокруг кнопки */
+  }
+  
+  /* Стили для кнопки при наведении */
+  .button:hover {
+    cursor: pointer; /* Изменить курсор на указатель */
+    background-color: #3e8e41; /* Изменить цвет фона кнопки на более темный */
+  }
+  
+  /* Стили для кнопки при нажатии */
+  .button:active {
+    background-color: #3e8e41; /* Изменить цвет фона кнопки на более темный */
+    box-shadow: inset 0 0 5px #666; /* Добавить тень внутри кнопки */
+  }

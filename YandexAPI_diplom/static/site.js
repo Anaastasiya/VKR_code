@@ -11,6 +11,17 @@ function runScript() {
     return uniqueValues;
   }
 
+  // // Функция для фильтрации массива по заданному значению
+  // function filterByValue(array, value) {
+  //   let filteredArray = [];
+  //   for (let item of array) {
+  //     if (item === value) {
+  //       filteredArray.push(item);
+  //     }
+  //   }
+  //   return filteredArray;
+  // }
+
   // Функция для создания элемента option для datalist
   function createOption(value) {
     let option = document.createElement("option");
@@ -78,10 +89,12 @@ function runScript() {
 
   // Получить данные о станциях из шаблона
   let stationsData = JSON.parse(document.getElementById("stations-data").textContent);
-
+  // localStorage.setItem("stationsData", stationsData);
   // Получить массивы стран, регионов и городов из данных о станциях
   let countries = getUniqueValues(stationsData.countries.map(country => country.title));
-  
+  // let regions = getUniqueValues(stationsData.countries.flatMap(country => country.regions.map(region => region.title)));
+  // let cities = getUniqueValues(stationsData.countries.flatMap(country => country.regions.flatMap(region => region.settlements.map(city => city.title))));
+
   // Добавить обработчики событий ввода значения input
 
   // При вводе значения в первый input страны
@@ -191,18 +204,24 @@ function runScript() {
 
   // Создаем функцию для получения координат по названию города
   function getCoordinates(city, selectedRegion) {
+    // Получаем данные о станциях из скрытого div
+    // var stations = JSON.parse(document.getElementById("stations-data").textContent);
 
     // Получить станции принадлежащие данному городу
     stations = stationsData.countries.flatMap(country => country.regions).find(region => region.title === selectedRegion).settlements.find(settlement => settlement.title === city).stations;
 
+    // stations = stations["countries"][0]["regions"][0]["settlements"];
     // Проходим по каждой станции и ищем заполненные широту и долготу
     for (var i = 0; i < stations.length; i++) {
       if (stations[i]["latitude"] != "") {
-        // Возвращаем координаты станции в виде массива
+        // Возвращаем координаты станции в виде массива, обернутые в промис
         return [stations[i]["latitude"], stations[i]["longitude"]];
-        }
+        //return Promise.resolve([stations[i]["latitude"], stations[i]["longitude"]]);
+      }
     }
     return [0,0];
+    // Если не нашли совпадение, возвращаем null, обернутый в промис
+    //return Promise.resolve(null);
   }
   // Добавляем обработчик события на клик по кнопке
   showRouteButton.addEventListener("click", function () {
@@ -216,8 +235,9 @@ function runScript() {
         from_lat = coords[0];
         from_lon = coords[1];
       }
+    
 
-    coords=getCoordinates(city2, regionInput2.value);
+      coords=getCoordinates(city2, regionInput2.value);
       if (coords) {
         to_lat = coords[0];
         to_lon = coords[1];
@@ -247,6 +267,7 @@ function runScript() {
     // Делаем что-то с массивом координат
     console.log(coordinates);
 
+
     // Проверяем, что оба города заданы и вызываем функцию showRoute()
     checkAndShowRoute();
   });
@@ -260,7 +281,15 @@ function runScript() {
   function showRoute(from_lat, from_lon, to_lat, to_lon) {
     // Создаем элемент для карты
     ymaps.ready(function () {
-      
+      // Проверяем, что карта существует
+      // var mapContainer = document.getElementById("map");
+      // // Получаем объект карты по HTML-элементу
+      // var map = ymaps.Map.getByContainer(mapContainer);
+      // // Если карта существует, выводим ее центр и зум
+      // if (map) {
+      //   console.log(map.getCenter(), map.getZoom());
+      // }
+      // else
       {
       //создаем новую
       var map = new ymaps.Map("map", {
@@ -273,7 +302,7 @@ function runScript() {
       map.controls.add("typeSelector");
       }
       var route;
-      route = solveTSP(coordinates);
+      route = solveTSP(coordinates, false);
       // Формируем URL для запроса к HTTP Геокодеру по координатам
       if (transport_type.value === "plane") 
       {
@@ -316,9 +345,13 @@ function runScript() {
           urls.push("https://geocode-maps.yandex.ru/1.x/?apikey=9431bf30-a1d4-4319-88e3-b17a8ad8830b&format=json&geocode=" + route[i][1] + "," + route[i][0]);
 
         }  
+        // var url1 = "https://geocode-maps.yandex.ru/1.x/?apikey=9431bf30-a1d4-4319-88e3-b17a8ad8830b&format=json&geocode=" + from_lon + "," + from_lat;
+        // var url2 = "https://geocode-maps.yandex.ru/1.x/?apikey=9431bf30-a1d4-4319-88e3-b17a8ad8830b&format=json&geocode=" + to_lon + "," + to_lat;
+
         
   
         // Делаем запросы с помощью fetch и обрабатываем ответы
+        // Promise.all([fetch(url1), fetch(url2)])
         Promise.all(urls.map(u=>fetch(u)))
           .then(function (responses) {
             return Promise.all(responses.map(function (response) {
@@ -331,7 +364,10 @@ function runScript() {
             for (var i = 0; i < data.length; i++) {
               cities.push(data[i]["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"]);
             }
+            // var city1 = data[0]["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"];
+            // var city2 = data[1]["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"];
             // Создаем маршрут по названиям городов с помощью библиотеки JavaScript API
+            // ymaps.route([city1, city2], { mapStateAutoApply: true, type: "plane"})
             ymaps.route(cities, { mapStateAutoApply: true, type: "plane"})
               .then(function (route) {
                 // Добавляем маршрут на карту
@@ -355,6 +391,10 @@ function runScript() {
     });
     
   }
+
+  // Вызываем функцию для отображения маршрута по заданным координатам
+  //showRoute(55.75, 37.62, 59.95, 30.32);
+  
 
 // Получаем ссылку на fieldset
 var fieldset = document.querySelector("fieldset:last-of-type");
@@ -423,7 +463,70 @@ fieldset.addEventListener("input", function(event) {
   }
 });
 
+  // Функция для сохранения пар регионов-городов в localstorage
+function saveRegionsCities() {
+  // Создаем пустой массив для хранения пар
+  let regionsCities = [];
+  // Получаем все элементы input с атрибутом name, начинающимся с "region-" или "city-"
+  let inputs = document.querySelectorAll("input[name^='region-'], input[name^='city-']");
+  // Проходим по всем элементам input и добавляем их значения в массив в виде объектов {region: ..., city: ...}
+  for (let i = 0; i < inputs.length; i += 2) {
+    // Проверяем, что оба значения не пустые
+    if (inputs[i].value && inputs[i+1].value) {
+      // Добавляем объект с регионом и городом в массив
+      regionsCities.push({region: inputs[i].value, city: inputs[i+1].value});
+    }
+  }
+  // Преобразуем массив в строку JSON и сохраняем в localstorage под ключом "regionsCities"
+  localStorage.setItem("regionsCities", JSON.stringify(regionsCities));  
+  // localStorage.setItem("stationsData", JSON.stringify(document.getElementById("stations-data").textContent));
 }
+
+// Функция для извлечения пар регионов-городов из localstorage и заполнения формы
+function loadRegionsCities() {
+  // Получаем строку JSON из localstorage по ключу "regionsCities"
+  let regionsCities = localStorage.getItem("regionsCities");
+  // Проверяем, что строка не пустая
+  if (regionsCities) {
+    // Преобразуем строку в массив объектов
+    regionsCities = JSON.parse(regionsCities);
+    // Проходим по всем объектам в массиве и заполняем соответствующие элементы input в форме
+    for (let i = 0; i < regionsCities.length; i++) {
+      // Получаем элементы input с атрибутом name, равным "region-" + (i+1) или "city-" + (i+1)
+      let regionInput = document.querySelector("input[name='region-" + (i+1) + "']");
+      let cityInput = document.querySelector("input[name='city-" + (i+1) + "']");
+      // Проверяем, что элементы существуют
+      if (regionInput && cityInput) {
+        // Заполняем элементы значениями из объекта
+        regionInput.value = regionsCities[i].region;
+        cityInput.value = regionsCities[i].city;
+      } else {
+        // Если элементов нет, значит нужно добавить новую строку в форму
+        addCity();
+        // Повторяем те же действия для новых элементов
+        regionInput = document.querySelector("input[name='region-" + (i+1) + "']");
+        cityInput = document.querySelector("input[name='city-" + (i+1) + "']");
+        regionInput.value = regionsCities[i].region;
+        cityInput.value = regionsCities[i].city;
+      }
+    }
+  }
+}
+// Получаем элемент формы по атрибуту action
+let form = document.querySelector("form[action='/find_routes']");
+// Добавляем обработчик события submit на форму
+form.addEventListener("submit", function(event) {
+  // Вызываем функцию для сохранения пар регионов-городов в localstorage
+  saveRegionsCities();
+  // Возвращаем true, чтобы продолжить отправку формы
+  return true;
+});
+
+
+}
+
+
+
 
 // Добавить функцию в качестве обработчика события DOMContentLoaded
 document.addEventListener("DOMContentLoaded", runScript);

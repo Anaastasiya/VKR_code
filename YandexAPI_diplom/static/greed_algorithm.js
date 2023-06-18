@@ -1,3 +1,4 @@
+
 // Функция, которая вычисляет расстояние между двумя точками по координатам
 function distance(lat1, lon1, lat2, lon2) {
   // Используем формулу гаверсинусов
@@ -10,8 +11,48 @@ function distance(lat1, lon1, lat2, lon2) {
   return d;
 }
 
+
+//cities_coords - глобальный массив вида [{"city":"Москва", "coords":"35.43,23.34"}]
+//optimalRoutes - глобальный массив со структурой таблицы, содержащий только оптималоьные маршруты
+//t_avg, p_avg - глобальные переменные содержащие среднее время и среднюю стоимость в оптимальных машрутах
+//k - глобальная переменная отвечающая за приоритет между ценой и временем
+function reeb_weight(lat1, lon1, lat2, lon2){
+  let city1 ="";
+  let city2 ="";
+  let t =0;
+  let p=0;
+  let cities_coords= JSON.parse(localStorage.getItem("cities_coords"));
+  let optimalRoutes= JSON.parse(localStorage.getItem("optimalRoutes"));
+  let t_avg = JSON.parse(localStorage.getItem("t_avg"));
+  let p_avg = JSON.parse(localStorage.getItem("p_avg"));
+  let k = JSON.parse(localStorage.getItem("k"));
+  //  city1,city2, t,p,k
+  //сперва по координатам найдем названия городов используя cities_coords
+  for (let i = 0; i < cities_coords.length; i++) {
+    if (cities_coords[i]["coords"][0] === lat1 && cities_coords[i]["coords"][1] === lon1 ){
+      city1 = cities_coords[i]["city"];
+    }
+    if (cities_coords[i]["coords"][0] === lat2 && cities_coords[i]["coords"][1] === lon2 ){
+      city2 = cities_coords[i]["city"];
+    }
+  }
+  //теперь, имея найдем p и t используя названия городов в optimalRoutes
+  for (let i = 0; i < optimalRoutes.length; i++) {
+    if (optimalRoutes[i].from === city1 && optimalRoutes[i].to === city2){
+      p=optimalRoutes[i].price;
+      t=optimalRoutes[i].duration;
+    }
+  }
+  //вернем вес ребра
+  if (p_avg === 0){
+    return t/t_avg*k;
+  }else{
+    return p/p_avg+t/t_avg*k;
+  }
+}
+
 // Функция, которая решает задачу комивояжера жадным алгоритмом
-function solveTSP(coordinates) {
+function solveTSP(coordinates, flag_use_weight) {
   // Создаем пустой массив для хранения маршрута
   var route = [];
   var last_city;
@@ -37,7 +78,14 @@ function solveTSP(coordinates) {
       // Получаем координаты текущего города
       var currentCity = coordinates[i];
       // Вычисляем расстояние от последнего посещенного города до текущего
-      var currentDistance = distance(lastCity[0], lastCity[1], currentCity[0], currentCity[1]);
+      var currentDistance=0;
+      if (flag_use_weight) {
+        currentDistance = reeb_weight(lastCity[0], lastCity[1], currentCity[0], currentCity[1]);
+      }
+      else
+      {
+       currentDistance = distance(lastCity[0], lastCity[1], currentCity[0], currentCity[1]);
+      }
       // Если расстояние меньше, чем минимальное до сих пор
       if (currentDistance < nearestDistance) {
         // Обновляем ближайший город и его индекс и расстояние до него
