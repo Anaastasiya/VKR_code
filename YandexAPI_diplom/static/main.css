@@ -403,6 +403,7 @@ border: 1px solid rgb(39, 37, 37);
     outline: none; /* Убрать рамку при фокусе */
     position: relative;
     top: 10px;
+    -webkit-appearance: none;
   }
   
   /* Стили для ползунка при наведении */

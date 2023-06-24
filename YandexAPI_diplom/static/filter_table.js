@@ -1,14 +1,20 @@
+var cities_coords = [];
 var optimalRoutes = [];
+
+let transport_type  ;
+
 // // Функция для выполнения кода скрипта
 function runScript() {
-
+    CorrectPrices();
+    var t_avg=0;
+    var p_avg=0;
     var showRouteButton = document.getElementById("showRouteButton");
     // Добавляем обработчик события на клик по кнопке
     showRouteButton.addEventListener("click", showRoute );
         // Получить элементы ползунка и спана
     let slider = document.getElementById("prioritySlider");
     let span = document.getElementById("priority");
-
+    transport_type = document.getElementById("transport_type");
     // Отобразить начальное значение ползунка в спане
     span.innerHTML = slider.value;
 
@@ -26,14 +32,31 @@ function runScript() {
     filterRoutes();
     }
 
+    function CorrectPrices() {
+        let table = document.querySelector("table");
+        // Получить все строки таблицы
+        let rows = table.querySelectorAll("tr");
+        
+        // Пройтись по всем строкам таблицы, начиная со второй (первая - это заголовок)
+        for (let i = 1; i < rows.length; i++) {
+            // Получить ячейки текущей строки
+            let cells = rows[i].querySelectorAll("td");
+            // Получить номер, тип транспорта, город отправления, город прибытия, время отправления, время прибытия и цену текущего рейса из ячеек
+            let price = cells[8].textContent;
+            if (price= "Неизвестно") {
+                cells[8].textContent = (1000+Math.random() * 5000).toFixed(2);; // случайная цена от 1000 до 6000                
+            }
+        }
+    }
+
     // Функция для фильтрации рейсов
-    
+    let k;
     function filterRoutes() {
         // Получить значение ползунка приоритета
         let slider = document.getElementById("prioritySlider");
         let priority = slider.value;
         // Вычислить коэффициент k
-        let k = priority / (110 - priority);
+        k = (priority + 10) / (110 - priority);
         // Получить таблицу с рейсами
         let table = document.querySelector("table");
         // Получить все строки таблицы
@@ -63,6 +86,9 @@ function runScript() {
             let departure = cells[5].textContent;
             let arrival = cells[6].textContent;
             let price = cells[8].textContent.split(" ")[0] ;
+            if (price === "Неизвестно"){//если сделать цену нулевой, она пропадет из веса ребра и отбор будет только по времени
+                price=0;
+            }
             // Вычислить продолжительность текущего рейса в часах
             let duration = (new Date(arrival) - new Date(departure)) / 3600000;
             // Если текущий город отправления или прибытия отличается от предыдущего, то это начало нового блока рейсов между двумя городами
@@ -169,8 +195,7 @@ function runScript() {
                 // rows[i].remove(); // Удалить строку
             }
         }
-         optimalRoutes = clone.slice(0);
-         
+        optimalRoutes = clone.slice(0);
     }
 
     // Функция для извлечения пар регионов-городов из localstorage и заполнения формы
@@ -204,12 +229,13 @@ function runScript() {
     //     }
     // }
     // Создаем функцию для получения координат по названию города
-    var stationsData =localStorage.getItem("stationsData", stationsData);
+    // var stationsData =localStorage.getItem("stationsData", stationsData);
+    var stationsData =JSON.parse(document.getElementById("stations-data").textContent);
     function getCoordinates(city, selectedRegion) {
         // Получаем данные о станциях из скрытого div
         // var stations = JSON.parse(document.getElementById("stations-data").textContent);
-
         // Получить станции принадлежащие данному городу
+        stationsData =JSON.parse(document.getElementById("stations-data").textContent);
         stations = stationsData.countries.flatMap(country => country.regions).find(region => region.title === selectedRegion).settlements.find(settlement => settlement.title === city).stations;
 
         // stations = stations["countries"][0]["regions"][0]["settlements"];
@@ -226,10 +252,10 @@ function runScript() {
         //return Promise.resolve(null);
     }
     var coordinates = [];
-    var cities_coords = [];
+    
     // Создаем функцию для получения и отображения маршрута
-    var t_avg=0;
-    var p_avg=0;
+    t_avg=0;
+    p_avg=0;
     function showRoute() {
         // обнуляем массив для хранения координат
 
@@ -270,6 +296,13 @@ function runScript() {
                     }
             }
         }
+        localStorage.setItem("cities_coords",JSON.stringify(cities_coords));
+
+        localStorage.setItem("optimalRoutes",JSON.stringify(optimalRoutes));
+        localStorage.setItem("t_avg",JSON.stringify(t_avg));
+        localStorage.setItem("p_avg",JSON.stringify(p_avg));
+        localStorage.setItem("k",JSON.stringify(k));
+
         // Делаем что-то с массивом координат
 
         //сохраним массив координат d
@@ -287,7 +320,8 @@ function runScript() {
             var route;
             route = solveTSP(coordinates, true);
             // Формируем URL для запроса к HTTP Геокодеру по координатам
-            if (transport_type.value === "plane") {
+            transport_type = document.getElementById("transport_type");
+            if (transport_type.textContent === "plane") {
                 var line = new ymaps.Polyline(
                     //   [
                     //    [from_lat, from_lon], // откуда
@@ -375,4 +409,4 @@ function runScript() {
 
 }
 // Добавить функцию в качестве обработчика события DOMContentLoaded
-document.addEventListener("DOMContentLoaded", runScript);
+document.addEventListener("DOMContentLoaded", runScript); 
