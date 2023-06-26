@@ -364,7 +364,7 @@ border: var(--border-width) solid var(--border-color);
     font-size: 17px;
     width: 90%;
     position: absolute;
-    top: 190px;
+    top: 210px;
     right: 80px;
     bottom: 70px;
     color: #000;
@@ -374,7 +374,6 @@ border: var(--border-width) solid var(--border-color);
     vertical-align: top;
     max-height: 100%;
     overflow-x: auto;
-    /*white-space: nowrap;*/
     -webkit-overflow-scrolling: touch;
     background-color: #fad6c3;
  }
@@ -403,6 +402,7 @@ border: 1px solid rgb(39, 37, 37);
     outline: none; /* Убрать рамку при фокусе */
     position: relative;
     top: 10px;
+    left: 70px;
     -webkit-appearance: none;
   }
   
@@ -434,6 +434,11 @@ border: 1px solid rgb(39, 37, 37);
     border: none; /* Убрать рамку кнопки */
     font-size: 18px; /* Установить размер шрифта кнопки */
     margin: 10px; /* Добавить отступы вокруг кнопки */
+  
+  }
+  [type=filterButton] {
+    position: relative;
+    left: 80px;
   }
   
   /* Стили для кнопки при наведении */
@@ -446,4 +451,7 @@ border: 1px solid rgb(39, 37, 37);
   .button:active {
     background-color: #3e8e41; /* Изменить цвет фона кнопки на более темный */
     box-shadow: inset 0 0 5px #666; /* Добавить тень внутри кнопки */
+  }
+  p1{
+    word-spacing: 12em;
   }

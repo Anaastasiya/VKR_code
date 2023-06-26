@@ -1,4 +1,5 @@
 var cities_coords = [];
+var transport_types = [];
 var optimalRoutes = [];
 
 let transport_type  ;
@@ -43,8 +44,8 @@ function runScript() {
             let cells = rows[i].querySelectorAll("td");
             // Получить номер, тип транспорта, город отправления, город прибытия, время отправления, время прибытия и цену текущего рейса из ячеек
             let price = cells[8].textContent;
-            if (price= "Неизвестно") {
-                cells[8].textContent = (1000+Math.random() * 5000).toFixed(2);; // случайная цена от 1000 до 6000                
+            if (price=="Неизвестно") {
+                cells[8].textContent = (1000+Math.random() * 5000).toFixed(2) + " RUB"; // случайная цена от 1000 до 6000                
             }
         }
     }
@@ -54,7 +55,7 @@ function runScript() {
     function filterRoutes() {
         // Получить значение ползунка приоритета
         let slider = document.getElementById("prioritySlider");
-        let priority = slider.value;
+        let priority = parseInt(slider.value,10);
         // Вычислить коэффициент k
         k = (priority + 10) / (110 - priority);
         // Получить таблицу с рейсами
@@ -80,10 +81,12 @@ function runScript() {
             let number = cells[1].textContent;
             let type = cells[2].textContent;
             // Получить город отправления и прибытия из первого поля, разделив его по символу "—"
-            let fromTo = cells[0].textContent.split("-");
+            let fromTo = cells[0].textContent.split("—");
             let from = fromTo[0].trim(); // Убрать пробелы в начале и конце
             let to = fromTo[1].trim(); // Убрать пробелы в начале и конце
-            let departure = cells[5].textContent;
+            let departure = cells[5].textContent.split("T");
+            let date = departure[0]; // Первый элемент массива - дата
+            let time = departure[1]; // Второй элемент массива - время
             let arrival = cells[6].textContent;
             let price = cells[8].textContent.split(" ")[0] ;
             if (price === "Неизвестно"){//если сделать цену нулевой, она пропадет из веса ребра и отбор будет только по времени
@@ -94,6 +97,7 @@ function runScript() {
             // Если текущий город отправления или прибытия отличается от предыдущего, то это начало нового блока рейсов между двумя городами
             let duplicate = false;
             if (from !== fromCity || to !== toCity) {
+                //k = (priority + 10) / (110 - priority);
                 // Если оптимальный рейс уже найден, то добавить его в массив оптимальных рейсов
                 duplicate = false;
                 if (optimalRoute) {
@@ -131,11 +135,15 @@ function runScript() {
                     k_p = 1;
                 }
                 else{
-                k_p = price / optimalRoute.price;
+                k_p = price / optimalRoute.price; // проигрыш в цене
                 }
-                let k_t = optimalRoute.duration / duration;
-                // Если условие k_t / k_p > k выполняется, то заменить оптимальный рейс на текущий
-                if (k_t / k_p > k) {
+                let k_t = optimalRoute.duration / duration; //выигрыш во времени
+               
+                //нужно уменьшить вес ребра, задаваемого формулой k_p_otn + k_t_otn*k
+                // Если условие k_p / k_t > k выполняется, то заменить оптимальный рейс на текущий
+                if (k_t>=1 && k_p<=1 ||
+                    k_t>1 && k_p>1 && k_t*k>k_p ||
+                    k_t<1 && k_p<1 && k_p*k<k_t) {
                     optimalRoute = {
                         number: number,
                         type: type,
@@ -174,7 +182,7 @@ function runScript() {
             // Получить номер, город отправления и город прибытия текущего рейса из ячеек
             let number = cells[1].textContent;
             // Получить город отправления и прибытия из первого поля, разделив его по символу "—"
-            let fromTo = cells[0].textContent.split("-");
+            let fromTo = cells[0].textContent.split("—");
             let from = fromTo[0].trim(); // Убрать пробелы в начале и конце
             let to = fromTo[1].trim(); // Убрать пробелы в начале и конце
 
@@ -271,9 +279,9 @@ function runScript() {
                 sum_price=sum_price+5000; //заглушка
             }
             else{
-            sum_price=sum_price+optimalRoutes[j].price;
+            sum_price=sum_price+parseFloat(optimalRoutes[j].price);
             }
-            sum_duration=sum_duration+optimalRoutes[j].duration;
+            sum_duration=sum_duration+parseFloat(optimalRoutes[j].duration);
         }
         t_avg = sum_duration/optimalRoutes.length;
         p_avg = sum_price/optimalRoutes.length;
@@ -318,7 +326,10 @@ function runScript() {
                 map.controls.add("zoomControl");
                 map.controls.add("typeSelector");
             var route;
+            
             route = solveTSP(coordinates, true);
+            LeaveOnlyRouteInTable(route);
+
             // Формируем URL для запроса к HTTP Геокодеру по координатам
             transport_type = document.getElementById("transport_type");
             if (transport_type.textContent === "plane") {
@@ -405,6 +416,58 @@ function runScript() {
 
         });
 
+    }
+
+    function LeaveOnlyRouteInTable(route){
+        let cities_coords= JSON.parse(localStorage.getItem("cities_coords"));
+        let table = document.querySelector("table");
+            // Получить все строки таблицы
+        let rows = table.querySelectorAll("tr");
+        //тут надо сделать все строки таблицы невидимыми 
+        for (let i = 1; i < rows.length; i++) {
+            rows[i].style.display = "none";
+        }
+        for (let r = 0; r < route.length-1; r++) {
+            lat1 = route[r][0];
+            lon1 = route[r][1]
+            lat2 = route[r+1][0];
+            lon2 = route[r+1][1]
+            let city1 ="";
+            let city2 ="";
+            
+            
+            //сперва по координатам найдем названия городов используя cities_coords
+            for (let i = 0; i < cities_coords.length; i++) {
+                if (cities_coords[i]["coords"][0] === lat1 && cities_coords[i]["coords"][1] === lon1 ){
+                    city1 = cities_coords[i]["city"];
+                }
+                if (cities_coords[i]["coords"][0] === lat2 && cities_coords[i]["coords"][1] === lon2 ){
+                    city2 = cities_coords[i]["city"];
+                }
+            }
+            for (let j = 0; j < optimalRoutes.length; j++) {
+                if (optimalRoutes[j].from == city1 && optimalRoutes[j].to == city2) {
+                    for (let i = 1; i < rows.length; i++) {
+                        let cells = rows[i].querySelectorAll("td");
+                        if(optimalRoutes[j].number == cells[1].textContent &&
+                                optimalRoutes[j].type == cells[2].textContent &&                        
+                                optimalRoutes[j].from+"—"+optimalRoutes[j].to == cells[0].textContent &&                        
+                                optimalRoutes[j].departure == cells[5].textContent &&
+                                optimalRoutes[j].arrival == cells[6].textContent &&
+                                optimalRoutes[j].price == cells[8].textContent.split(" ")[0] ){
+
+                            rows[i].style.display = "table-row";//строку делаем видимой, т.к. она есть в маршруте
+                            //добавить в глобальный массив transport_types[] optimalRoutes[j].type
+                            transport_types.push(optimalRoutes[j].type);
+                            break;
+                        }
+                    }
+                    break;
+                }
+                
+            }
+        }
+        
     }
 
 }

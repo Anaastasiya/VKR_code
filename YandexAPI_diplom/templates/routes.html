@@ -38,11 +38,11 @@
         
             <!-- Ползунок приоритета между ценой и временем -->
         <div class="slidecontainer">
-            <p>Выберите приоритет: <span id="priority"></span></p>
+            <p>Выберите приоритет: <span id="priority"></span></p><p1>Цена Время</p1><br>
             <input type="range" min="0" max="100" value="50" class="slider" id="prioritySlider">
-        
+            
         <!-- Кнопка активации фильтра -->
-        <button type="button" id="filterButton" onclick="filterRoutes()">Применить фильтр</button>
+        <button type="filterButton" id="filterButton" onclick="filterRoutes()">Применить фильтр</button>
         </div>
         <table>
         <thead>
@@ -71,22 +71,29 @@
                     <td>{{ route.to.title }}</td>
                     <td>{{ route.departure }}</td>
                     <td>{{ route.arrival }}</td>
-                    <td>{{ route.duration // 60 }} мин</td>
+                    
+                    <td>{% if route.duration // 60 > 60 %}
+                        {{ route.duration // 3600 }} ч {{ (route.duration %3600 )// 60 }} мин
+                        {% else %}
+                        {{ route.duration // 60 }} мин
+                        {% endif %}
+                    </td>
+                   
                     {% if route.tickets_info %}
                         {% if route.tickets_info.places %}
                             {% if route.tickets_info.places[0].price %}
                                 {% if route.tickets_info.places[0].price.whole %}
                                     <td>{{ route.tickets_info.places[0].price.whole }} 
                                         {{ route.tickets_info.places[0].currency }}</td>
+                                {% else %}
+                                    <td>Неизвестно</td>
                                 {% endif %}
+                            {% else %}
+                            <td>Неизвестно</td>
                             {% endif %}
+                        {% else %}
+                        <td>Неизвестно</td>
                         {% endif %}
-                    {% else %}
-                    <td></td>
-                    {% endif %}
-
-                    {% if route.price %}
-                    <td>{{ route.price.whole.amount }} {{ route.price.currency }}</td>
                     {% else %}
                     <td>Неизвестно</td>
                     {% endif %}

@@ -42,9 +42,9 @@ def get_routes(from_city, to_city, date,transport_type, from_region, to_region):
     for i in range(len(data["segments"])): 
         from_city =    data["search"]["from"]["popular_title"]
         to_city=   data["search"]["to"]["popular_title"] 
-        data["segments"][i]["thread"]["title"] =  from_city+"-"+to_city
-    print(data["search"]["from"]["popular_title"])
-    print(data["search"]["to"]["popular_title"])
+        data["segments"][i]["thread"]["title"] =  from_city+"—"+to_city
+    print("from: "+data["search"]["from"]["popular_title"]+" to: "+data["search"]["to"]["popular_title"])
+    
     return data
 
 # Отобразить главную страницу с формой выбора страны, региона и города
@@ -67,7 +67,7 @@ def find_routes():
     
     date = request.form.get("date")
     transport_type = request.form.get("transport_type")
-    a=list(range(3,int(len(request.form)/3)))
+    a=list(range(3,int(len(request.form)/3+1)))
     # сперва найдем все рейсы из стартового города к остальным городам
     routes_datas.append(get_routes(from_city, to_city, date,transport_type,from_region, to_region))
     for i in a:
@@ -84,7 +84,7 @@ def find_routes():
                 trans_region_2 = request.form.get("region-"+str(j))
                 trans_city_2 = request.form.get("city-"+str(j))
                 routes_datas.append(get_routes(trans_city_1, trans_city_2, date,transport_type,trans_region_1,trans_region_2))
-                routes_datas.append(get_routes(trans_city_2, trans_city_1, date,transport_type,trans_region_2,trans_region_1)) 
+                # routes_datas.append(get_routes(trans_city_2, trans_city_1, date,transport_type,trans_region_2,trans_region_1)) 
     return render_template("routes.html", routes_data=routes_datas,stations_data=stations_data,transport_type=transport_type)
     
 
