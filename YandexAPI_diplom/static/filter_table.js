@@ -84,9 +84,7 @@ function runScript() {
             let fromTo = cells[0].textContent.split("—");
             let from = fromTo[0].trim(); // Убрать пробелы в начале и конце
             let to = fromTo[1].trim(); // Убрать пробелы в начале и конце
-            let departure = cells[5].textContent.split("T");
-            let date = departure[0]; // Первый элемент массива - дата
-            let time = departure[1]; // Второй элемент массива - время
+            let departure = cells[5].textContent;
             let arrival = cells[6].textContent;
             let price = cells[8].textContent.split(" ")[0] ;
             if (price === "Неизвестно"){//если сделать цену нулевой, она пропадет из веса ребра и отбор будет только по времени

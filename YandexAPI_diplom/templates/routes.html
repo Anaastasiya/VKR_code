@@ -10,6 +10,8 @@
     <script src="/static/filter_table.js"></script>
     <script src="/static/greed_algorithm.js"></script>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=9431bf30-a1d4-4319-88e3-b17a8ad8830b&lang=ru_RU"></script>
+<!-- Подключаем скрипт для работы с датой и временем -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 </head>
 <body>
 <!-- Header -->
@@ -60,8 +62,15 @@
             </tr>
         </thead>
         <tbody>
+            
+            
+
+
             {%for pair_cities in routes_data%}
                 {% for route in pair_cities.segments %}
+                
+                  
+                
                 <tr>
                     
                     <td>{{ route.thread.title }}</td>
@@ -69,15 +78,16 @@
                     <td>{{ route.thread.transport_type }}</td>
                     <td>{{ route.from.title }}</td>
                     <td>{{ route.to.title }}</td>
-                    <td>{{ route.departure }}</td>
-                    <td>{{ route.arrival }}</td>
+                    <td>{{ route.departure.format("DD.MM.YY HH:mm (UTCZ)") }}</td>
+                    <td>{{ route.arrival.format("DD.MM.YY HH:mm (UTCZ)") }}</td>
                     
                     <td>{% if route.duration // 60 > 60 %}
-                        {{ route.duration // 3600 }} ч {{ (route.duration %3600 )// 60 }} мин
+                        {{ (route.duration // 3600) | int }} ч {{ ((route.duration %3600 )// 60) | int }} мин
                         {% else %}
-                        {{ route.duration // 60 }} мин
+                        {{ (route.duration // 60 ) | int }} мин
                         {% endif %}
                     </td>
+                    
                    
                     {% if route.tickets_info %}
                         {% if route.tickets_info.places %}

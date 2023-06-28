@@ -455,3 +455,17 @@ border: 1px solid rgb(39, 37, 37);
   p1{
     word-spacing: 12em;
   }
+  
+  [type=remove]  
+     {
+        /*margin: 5px; /* добавляем отступы */
+        width: 25px; /* задаем ширину */
+        height: 25px; /* задаем высоту */
+        
+        font-size: 16px;
+        background-color: rgba(34, 34, 34, 0.164); /* задаем цвет фона */
+        color: white; /* задаем цвет текста */
+        cursor: pointer; /* задаем курсор в виде руки */
+      
+  }
+  
