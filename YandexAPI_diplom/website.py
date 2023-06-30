@@ -3,9 +3,7 @@ import requests
 API_KEY = '1d5197db-641b-460e-a97e-750e0311d94c'
 app = Flask(__name__)
 
-@app.route('/site')
-def example_site_4():
-    return render_template('site.html')
+
 
 @app.route('/routes')
 def routes():
@@ -84,7 +82,7 @@ def find_routes():
                 trans_region_2 = request.form.get("region-"+str(j))
                 trans_city_2 = request.form.get("city-"+str(j))
                 routes_datas.append(get_routes(trans_city_1, trans_city_2, date,transport_type,trans_region_1,trans_region_2))
-                # routes_datas.append(get_routes(trans_city_2, trans_city_1, date,transport_type,trans_region_2,trans_region_1)) 
+ 
     return render_template("routes.html", routes_data=routes_datas,stations_data=stations_data,transport_type=transport_type)
     
 
