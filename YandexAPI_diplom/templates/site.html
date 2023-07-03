@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&family=Raleway:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="shortcut icon" href="/static/pictures/favicon.ico" type="image/x-icon">
+  <title>RouteCountry</title>
+  <link rel="stylesheet" href="/static/main.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/static/site.js"></script>
+  <script src="/static/add_city.js"></script>
+</head>
+
+<body>
+  <!-- Заголовок -->
+  <header class="header">
+    <div class="container">
+      <div class="header__inner">
+        <div class="header__logo">
+          <div id="logo" onclick="slowScroll('#top')">
+            <span>RouteCountry</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a class="nav__link">Маршруты</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Вступление -->
+  <div class="intro">
+    <div class="container">
+      <div class="intro__inner">
+
+        <!-- Скрытый элемент для передачи данных о станциях в скрипт -->
+        <div id="stations-data" hidden>{{ stations_data | tojson }}</div>
+
+        <form action="/find_routes" method="post">
+          <fieldset>
+            <legend>Пункт отправления</legend>
+            <input id="country-input-1" name="country-1" type="text" list="country-list-1" placeholder="Страна"
+              required>
+            <datalist id="country-list-1"></datalist>
+            <input id="region-input-1" name="region-1" type="text" list="region-list-1" placeholder="Регион" required>
+            <datalist id="region-list-1"></datalist>
+            <input id="city-input-1" name="city-1" type="text" list="city-list-1" placeholder="Город" required>
+            <datalist id="city-list-1"></datalist>
+          </fieldset><br><br>
+          <fieldset>
+            <legend>Пункт прибытия</legend>
+            <input id="country-input-2" name="country-2" type="text" list="country-list-2" placeholder="Страна"
+              required>
+            <datalist id="country-list-2"></datalist>
+            <input id="region-input-2" name="region-2" type="text" list="region-list-2" placeholder="Регион" required>
+            <datalist id="region-list-2"></datalist>
+            <input id="city-input-2" name="city-2" type="text" list="city-list-2" placeholder="Город" required>
+            <datalist id="city-list-2"></datalist>
+          </fieldset><br><br>
+          <fieldset>
+            <datalist id="country-list"></datalist>
+            <datalist id="region-list"></datalist>
+            <datalist id="city-list"></datalist>
+          </fieldset><br><br>
+          <input id="date-input" name="date" type="date" placeholder="Дата" equired>
+          <label for="transport_type">Вид транспорта:</label>
+          <select id="transport_type" name="transport_type">
+            <option value="any">Любой</option>
+            <option value="plane">Самолет</option>
+            <option value="train">Поезд</option>
+            <option value="bus">Автобус</option>
+          </select><br><br>
+
+          <button class="b_w btn--waypoint" type="button" onclick="addCity()">Выбрать промежуточный город</a><br><br>
+
+            <button id="btn btn--red" type="submit">Найти</button><br>
+      </div>
+    </div><br>
+    </form>
+
+  </div>
+  </div>
+  </div>
+
+
+  <footer>
+    <div id="social">
+      <a href="https://vk.com" title="Группа ВК" target="_blank">
+        <img src="../static/pictures/vk.png" alt="ВК" title="ВК"></a>
+      <a href="https://www.whatsapp.com" title="Whatsapp" target="_blank">
+        <img src="../static/pictures/whatsapp.png" alt="Whatsapp" title="Whatsapp"></a>
+      <a href="https://web.telegram.org" title="Группа telegram" target="_blank">
+        <img src="../static/pictures/telegram.png" alt="Telegram" title="Telegram"></a>
+    </div>
+    <div id="rights">
+      Все права защищены &copy 2023 RouteCountry<br>
+      E-mail: helproute@mail.ru
+    </div>
+  </footer>
+</body>
+
+</html>

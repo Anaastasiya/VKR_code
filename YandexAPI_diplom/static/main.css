@@ -1,0 +1,471 @@
+header #logo {
+    color: rgb(189, 189, 189);
+    cursor: pointer;
+  }
+  header #logo span{
+      font-size: 1.7em;
+      line-height: 45px;
+      margin-left: 40px;
+      font-family: 'Open Sens', sans-serif;
+  }
+body {
+    margin: 0;
+
+    font-family:'Raleway', sans-serif;
+    font-size: 14px;
+    color: #6c7279;
+    -webkit-font-smoothing: antialiased;
+    background-color: #fff;
+}
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+p {
+    margin: 0 0 10px;
+}
+
+ /* Container
+===================*/
+.container {
+    width:  100%;
+    max-width: 1170px;
+    margin: 0 auto;
+}
+
+/* Container
+===================*/
+.header {
+    width: 100%;
+    height: 100px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    
+
+}
+
+ .header__inner {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 20px 0;
+
+     border-bottom: 1px solid #ffffff;
+ }
+
+ /* Nav
+===================*/
+ .nav {
+     display: flex;
+     font-size: 13px;
+     font-weight: 700;
+     text-transform: uppercase;
+ }
+
+ .nav__link {
+     margin-left: 50px;
+
+     color: #fff;
+     text-decoration: none;
+     opacity: .75;
+
+     transition: oppacity .1s linear;
+ }
+
+ .nav__link:first-child {
+     margin-left: 0;
+ }
+
+ .nav__link:hover {
+     opacity: 1;
+    
+ }
+
+/* Вступление
+===================*/
+ .intro {
+     display:flex;
+     flex-direction: column;
+     height: 750px;
+     padding-top: 70px;
+     justify-content: center;
+
+     background: #5f6277 
+     url("pictures/intro-bg.jpg") no-repeat center;
+     background-blend-mode: multiply;
+background-color: #6b7075;
+background-size: cover;
+text-align: center;
+color: #fff;
+font-size: 16px;
+ 
+ }
+.intro__inner {
+    width: 100%;
+    max-width: 970px;
+    margin: 0 auto;
+    text-align: center;
+    
+}
+.stations-data {
+    margin: 0 0 90px;
+    font-family: 'Open Sens', sans-serif;
+    font-size: 65px;
+    line-height: 1;
+    color: #fff;
+    font-weight: 400;
+    text-transform: uppercase;
+     }
+ 
+ .intro_subtitle {
+     margin-bottom: 100px;
+     font-size: 30px;
+     color: #fff;
+     line-height: 1;
+     font-weight: 400;
+ }
+
+ input[type=text] {
+    
+    width: 25%;
+    height: 40px;
+    padding: 5px 20px;
+    box-sizing: border-box;
+    border: 2px solid #424242;
+    border-radius: 4px;
+    background-color: #ffffff;
+    resize: none;
+    font-size: 17px;
+
+ }
+ 
+
+ input[type=date] {
+   
+    width: 18%;
+    height: 40px;
+    padding: 5px 20px;
+    position: relative;
+    right: 150px;
+    box-sizing: border-box;
+    border: 2px solid #424242;
+    border-radius: 4px;
+    background-color: #ffffff;
+    resize: none;
+    font-size: 17px;
+    font-family: 'Open Sens', sans-serif;
+ }
+ select {
+    width: 16%;
+    height: 40px;
+    padding: 5px 20px;
+    position: relative;
+    right: 120px;
+    margin-right: 10px;
+    box-sizing: border-box;
+    border: 2px solid #424242;
+    border-radius: 4px;
+    background-color: #ffffff;
+    resize: none;
+    font-size: 17px;
+    font-family: 'Open Sens', sans-serif;
+
+ }
+ label {
+    position: relative;
+    right: 130px;
+ }
+ 
+
+ /* map
+ ===================*/
+ .map_class {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 50px 0;
+
+}
+.map__item {
+    padding: 40px;
+    margin: 25px 0;
+    text-align: center;
+    
+}
+
+.map__title {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #2d3033;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.map__text {
+    font-size: 14px;
+    color: #6c7279;
+}
+
+[type=showRouteButton]  {
+    display: inline-block;
+     vertical-align: top;
+     padding: 10px 20px;
+     border-radius: 3px;
+     border: 1px solid #535353;
+     cursor: pointer;
+     font-family: 'Raleway', sans-serif;
+     font-size: 13px;
+     color: #ffffff;
+     font-weight: 600;
+     text-transform: uppercase;
+     text-decoration: none;
+    background-color: #f88c44;
+    position: relative;
+    bottom: 30px;
+    box-align: center;
+     transition: background .1s linear;
+}
+
+[type=showRouteButton]:hover {
+    background-color: #cd7f55;
+}
+
+[type=map] {
+width: 700px;
+height: 500px; 
+position: relative;
+left: 200px;
+box-align: center;
+}
+
+  
+ /* Button
+===================*/
+.b_w {
+    display: inline-block;
+    vertical-align: top;
+    height: 40px;
+    padding: 8px 17px;
+    border-radius: 4px;   
+    box-sizing: border-box;
+    border: 2px solid #383737;
+    cursor: pointer;
+    font-family: 'Open Sens', sans-serif;
+    font-size: 17px;
+    color: #010101;
+    position: relative;
+    box-align: center;
+    left: 320px;
+    margin-left: 10px;
+    bottom: 60px;
+    text-decoration: none;
+    resize: none;
+    transition: background .1s linear;
+}
+
+ 
+.btn--waypoint {
+    background-color: #e4b596;
+}
+.btn--waypoint:hover {
+    background-color: #d1865e;
+}
+[type=submit]  {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 3px;
+    border: 1px solid #535353;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    color: #000000;
+    font-weight: 600;
+    top: 15px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background-color: #f4731e;
+    position: relative;
+    right: 150px;
+    transition: background .1s linear;
+
+ }
+
+ [type=submit]:hover {
+     background-color: #ec641b;
+ }
+  
+
+/* footer */
+footer{
+    width: 100%;
+    height: 150px;;
+    float: left;
+    padding: 1%;
+    background-color: #fafafa;
+    border-top: 2px solid silver;
+    margin-top: 10px;
+    padding-bottom: 4%;
+}
+footer img{ width: 10%;float: left; margin-right: 5px}; 
+#page-wrap:after {
+    content: "";
+    display: block;
+}
+footer, #page-wrap:after {height: 12px}
+#page-wrap{
+    min-height: 93%;
+    margin-bottom: -10px;
+}
+footer #social img{
+    width: 35px;
+    height: 35px;
+    float:left;
+    margin-right: 10px;
+}
+footer #rights {
+    float: right;
+    width: 50%;
+    text-align: right;
+    font-size: 1em;
+    line-height: 1.7;
+
+}
+.intro1 {
+  
+    height: 750px;
+    padding-top: 80px;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-attachment:fixed;
+    background: #5f6277 
+    url("pictures/intro-bg.jpg") no-repeat center;
+    background-blend-mode: multiply;
+background-color: #6b7075;
+background-size: cover;
+text-align: center;
+color: #fff;
+font-size: 16px;
+}
+:root {
+border-width: 2px;
+border-color: #CED4DA;
+border: var(--border-width) solid var(--border-color);
+    }
+ table {
+    font-family: 'Open Sens', sans-serif;
+    font-size: 17px;
+    width: 90%;
+    position: absolute;
+    top: 210px;
+    right: 80px;
+    bottom: 70px;
+    color: #000;
+    border-collapse: collapse;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    max-height: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #fad6c3;
+ }
+ thead  {
+position: sticky;
+top: 0;}
+
+th {
+background-color:#f9b083;
+padding: 5px;
+border: 2px solid rgb(39, 37, 37);
+ }
+ td {
+background-color: #fad6c3;
+padding: 5px;
+border: 1px solid rgb(39, 37, 37);
+  }
+
+
+
+/* Стили для ползунка */
+.slider {
+    width: 300px; /* Установить ширину ползунка */
+    height: 25px; /* Установить высоту ползунка */
+    background-color: #ddd; /* Установить цвет фона ползунка */
+    outline: none; /* Убрать рамку при фокусе */
+    position: relative;
+    top: 10px;
+    left: 70px;
+    -webkit-appearance: none;
+  }
+  
+  /* Стили для ползунка при наведении */
+  .slider:hover {
+    cursor: pointer; /* Изменить курсор на указатель */
+  }
+  
+  /* Стили для ползователя ползунка */
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Убрать стандартный вид */
+    width: 25px; /* Установить ширину ползователя */
+    height: 25px; /* Установить высоту ползователя */
+    background-color: #4CAF50; /* Установить цвет фона ползователя */
+    border-radius: 50%; /* Сделать ползователь круглым */
+  }
+  
+  /* Стили для ползователя ползунка при наведении */
+  .slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 5px #4CAF50; /* Добавить тень вокруг ползователя */
+  }
+  
+  /* Стили для кнопки */
+  .button {
+    width: 150px; /* Установить ширину кнопки */
+    height: 40px; /* Установить высоту кнопки */
+    color: white; /* Установить цвет текста кнопки */
+    background-color: #4CAF50; /* Установить цвет фона кнопки */
+    border: none; /* Убрать рамку кнопки */
+    font-size: 18px; /* Установить размер шрифта кнопки */
+    margin: 10px; /* Добавить отступы вокруг кнопки */
+  
+  }
+  [type=filterButton] {
+    position: relative;
+    left: 80px;
+  }
+  
+  /* Стили для кнопки при наведении */
+  .button:hover {
+    cursor: pointer; /* Изменить курсор на указатель */
+    background-color: #3e8e41; /* Изменить цвет фона кнопки на более темный */
+  }
+  
+  /* Стили для кнопки при нажатии */
+  .button:active {
+    background-color: #3e8e41; /* Изменить цвет фона кнопки на более темный */
+    box-shadow: inset 0 0 5px #666; /* Добавить тень внутри кнопки */
+  }
+  p1{
+    word-spacing: 12em;
+  }
+  
+  [type=remove]  
+     {
+        /*margin: 5px; /* добавляем отступы */
+        width: 25px; /* задаем ширину */
+        height: 25px; /* задаем высоту */
+        
+        font-size: 16px;
+        background-color: rgba(34, 34, 34, 0.164); /* задаем цвет фона */
+        color: white; /* задаем цвет текста */
+        cursor: pointer; /* задаем курсор в виде руки */
+      
+  }
+  
